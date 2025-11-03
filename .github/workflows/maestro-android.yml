@@ -1,5 +1,5 @@
 name: Maestro (Android)
-  
+
 on: 
   workflow_dispatch:
   push:
@@ -33,11 +33,12 @@ jobs:
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 31
+          target: aosp_atd
+          profile: pixel_5
+          avd-name: Pixel_5_API_31_AOSP
           script: |
-            sdkmanager --list
-            avdmanager list device
-            $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
+            adb install android/app/build/outputs/apk/release/app-release.apk 
             $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
 
       - name: Upload test video
