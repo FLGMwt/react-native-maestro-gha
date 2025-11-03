@@ -19,6 +19,7 @@ jobs:
 
       - name: Run Maestro tests
         run: |
+          open -a Simulator --args -CurrentDeviceUDID 16C7C924-90C5-4EFD-A5F2-9647BB0835AD
           xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
           maestro record maestro maestro/Launch.yaml --local Launch.mp4
 
