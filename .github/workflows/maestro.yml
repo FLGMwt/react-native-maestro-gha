@@ -1,0 +1,19 @@
+name: Maestro
+
+on: push
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+            npm install
+            brew tap mobile-dev-inc/tap
+            brew install maestro
+        
+      - name: Run Maestro tests
+        run: |
+          npx react-native run-ios
+          maestro test maestro
