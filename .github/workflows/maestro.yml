@@ -13,8 +13,16 @@ jobs:
             brew tap mobile-dev-inc/tap
             brew install maestro
         
+      - name: Build iOS App
+        run: |
+          xcodebuild -workspace ios/MaestroGitHubActions.xcworkspace -scheme MaestroGitHubActions -configuration Release -sdk iphonesimulator -derivedDataPath ios/build
+
       - name: Run Maestro tests
         run: |
-          npx react-native start &
-          npx react-native run-ios --mode "Release" --force-pods --verbose
-          maestro test maestro
+          xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
+          maestro record maestro maestro/Launch.yaml --local Launch.mp4
+
+      - name: Upload test video
+        uses: actions/upload-artifact@v2
+        with:
+          path: Launch.mp4
