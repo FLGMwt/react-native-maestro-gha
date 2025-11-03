@@ -2,4 +2,4 @@ appId: org.reactjs.native.example.MaestroGitHubActions
 ---
 - launchApp:
     clearState: true
-- assertVisible: 💡 Open App.tsx to get started
+- assertVisible: Learn & Explore
