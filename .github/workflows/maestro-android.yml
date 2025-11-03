@@ -15,9 +15,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          npm install
           export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
-          ./.maestro/bin/maestro --help
+          $HOME/.maestro/bin/maestro --help
+          npm install
         
       - name: Build Android App
         run: |
@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Maestro tests
         run: |
-          ./maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
+          $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
 
       - name: Upload test video
         uses: actions/upload-artifact@v4
