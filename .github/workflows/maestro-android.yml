@@ -30,8 +30,6 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 31
-          profile: pixel_5
-          avd-name: Pixel_5_API_31_AOSP
           cmake: 3.22.1
           ndk: 27.1.12297006
           pre-emulator-launch-script: |
