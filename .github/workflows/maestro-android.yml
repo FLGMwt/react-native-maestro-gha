@@ -6,11 +6,10 @@ on:
 
 jobs:
   build:
-    # strategy:
-    #   matrix:
-    #     os: [ubuntu-24.04, macos-15-intel]
-    # runs-on: ${{ matrix.os }}
-    runs-on: macos-15-intel
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, macos-15-intel]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
@@ -19,12 +18,10 @@ jobs:
           npm install
           export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
           export PATH="$PATH":"$HOME/.maestro/bin"
-          maestro --help
+          ./maestro/bin/maestro --help
         
       - name: Build Android App
         run: |
-          # do envs persist across steps?
-          maestro --help
           npx react-native build-android --tasks assembleRelease
 
       # Use the Android command line tools to download an AOSP emulator image, and setup new avd
@@ -49,7 +46,7 @@ jobs:
 
       - name: Run Maestro tests
         run: |
-          maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
+          ./maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
 
       - name: Upload test video
         uses: actions/upload-artifact@v4
