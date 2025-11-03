@@ -1,6 +1,8 @@
-name: Maestro
+name: Maestro (iOS)
 
-on: push
+on:
+  workflow_dispatch:
+  # push:
 
 jobs:
   build:
@@ -22,9 +24,10 @@ jobs:
         run: |
           open -a Simulator --args -CurrentDeviceUDID 16C7C924-90C5-4EFD-A5F2-9647BB0835AD
           xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
-          maestro record maestro/Launch.yaml Launch.mp4 --local
+          maestro record maestro/Launch.ios.yaml Launch.ios.mp4 --local
 
       - name: Upload test video
         uses: actions/upload-artifact@v4
         with:
-          path: Launch.mp4
+          path: Launch.ios.mp4
+          name: iOS

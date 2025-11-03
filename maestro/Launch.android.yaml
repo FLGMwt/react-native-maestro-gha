@@ -1,0 +1,5 @@
+appId: com.maestrogithubactions
+---
+- launchApp:
+    clearState: true
+- assertVisible: 💡 Open App.tsx to get started
