@@ -12,8 +12,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          brew tap mobile-dev-inc/tap
-          brew install maestro
+          export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
         
       - name: Build Android App
         run: |
