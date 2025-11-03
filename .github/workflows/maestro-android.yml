@@ -8,11 +8,17 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-24.04, macos-15-intel]
+        os: [ubuntu-24.04]
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
@@ -24,29 +30,13 @@ jobs:
         run: |
           npx react-native build-android --tasks assembleRelease
 
-      # Use the Android command line tools to download an AOSP emulator image, and setup new avd
-      # x86_64 OR arm64-v8a <- intel vs M#
-      - name: Download Android Emulator Image
-        run: |
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-31;default;x86_64"
-          echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n Pixel_5_API_31_AOSP -d pixel --package 'system-images;android-31;default;x86_64'
-          $ANDROID_HOME/emulator/emulator -list-avds
-
-      # Starts the avd previously set-up by name
-      - name: Android Emulator
-        timeout-minutes: 100
-        run: |
-          echo "Starting emulator"
-          nohup $ANDROID_HOME/emulator/emulator -avd Pixel_5_API_31_AOSP -no-audio -no-snapshot -no-window -no-boot-anim -timezone America/Los_Angeles &
-          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-          $ANDROID_HOME/platform-tools/adb devices
-          $ANDROID_HOME/platform-tools/adb emu geo fix -121.45356 46.51119 4392 12
-          $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk
-          echo "Emulator started"
-
-      - name: Run Maestro tests
-        run: |
-          $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: |
+            $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk
+            $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
 
       - name: Upload test video
         uses: actions/upload-artifact@v4
