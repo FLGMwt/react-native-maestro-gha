@@ -17,8 +17,7 @@ jobs:
         run: |
           npm install
           export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
-          export PATH="$PATH":"$HOME/.maestro/bin"
-          ./maestro/bin/maestro --help
+          ./.maestro/bin/maestro --help
         
       - name: Build Android App
         run: |
