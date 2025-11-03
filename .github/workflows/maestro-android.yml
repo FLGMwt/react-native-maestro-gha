@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: [ubuntu-24.04, macos-15-intel]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
@@ -28,7 +28,7 @@ jobs:
 
       # Starts the avd previously set-up by name
       - name: Android Emulator
-        timeout-minutes: 10
+        timeout-minutes: 100
         run: |
           echo "Starting emulator"
           nohup $ANDROID_HOME/emulator/emulator -avd Pixel_5_API_31_AOSP -no-audio -no-snapshot -no-window -no-boot-anim -timezone America/Los_Angeles &
