@@ -15,5 +15,6 @@ jobs:
         
       - name: Run Maestro tests
         run: |
+          npx react-native start &
           npx react-native run-ios --mode "Release" --force-pods --verbose
           maestro test maestro
