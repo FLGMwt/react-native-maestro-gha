@@ -6,17 +6,19 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-24.04, macos-15-intel]
-    runs-on: ${{ matrix.os }}
-    
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-24.04, macos-15-intel]
+    # runs-on: ${{ matrix.os }}
+    runs-on: macos-15-intel
+
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
           npm install
           export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
+          maestro --help
         
       - name: Build Android App
         run: |
