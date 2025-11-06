@@ -39,7 +39,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: android-release-apk
-          github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: FLGMwt/react-native-maestro-gha
           run-id: 31
 
