@@ -26,14 +26,16 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      - name: Build Android App
+        run: |
+          npx react-native build-android --tasks assembleRelease
+
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
-          pre-emulator-launch-script: |
-            npx react-native build-android --tasks assembleRelease
+          api-level: 29
           script: |
-            adb install android/app/build/outputs/apk/release/app-release.apk 
+            $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
             $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
 
       - name: Upload test video
