@@ -48,7 +48,7 @@ jobs:
         with:
           api-level: 29
           script: |
-            $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
+            $ANDROID_HOME/platform-tools/adb install app-release.apk
             $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
 
       - name: Upload test video
