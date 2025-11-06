@@ -30,6 +30,12 @@ jobs:
         run: |
           npx react-native build-android --tasks assembleRelease
 
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          path: android/app/build/outputs/apk/release/app-release.apk
+          name: android-release-apk
+
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
