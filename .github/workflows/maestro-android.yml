@@ -41,7 +41,7 @@ jobs:
           name: android-release-apk
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: FLGMwt/react-native-maestro-gha
-          run-id: 31
+          run-id: 19147543442
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
