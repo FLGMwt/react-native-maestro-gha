@@ -31,7 +31,7 @@ jobs:
         with:
           api-level: 30
           pre-emulator-launch-script: |
-            npx react-native build-android --tasks assembleRelease --active-arch-only
+            npx react-native build-android --tasks assembleRelease
           script: |
             adb install android/app/build/outputs/apk/release/app-release.apk 
             $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
