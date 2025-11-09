@@ -30,7 +30,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
-          gradle-version: '9.2.0'
+          gradle-version: '8.13.0'
 
       - name: Build Android App
         run: |
