@@ -27,23 +27,28 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      # - name: Build Android App
-      #   run: |
-      #     npx react-native build-android --tasks assembleRelease
-
-      # - name: Upload Android APK
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     path: android/app/build/outputs/apk/release/app-release.apk
-      #     name: android-release-apk
-
-      - uses: actions/download-artifact@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
         with:
+          gradle-version: '9.2.0'
+
+      - name: Build Android App
+        run: |
+          npx react-native build-android --tasks assembleRelease
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          path: android/app/build/outputs/apk/release/app-release.apk
           name: android-release-apk
-          path: android/app/build/outputs/apk/release
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FLGMwt/react-native-maestro-gha
-          run-id: 19147543442
+
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     name: android-release-apk
+      #     path: android/app/build/outputs/apk/release
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     repository: FLGMwt/react-native-maestro-gha
+      #     run-id: 19147543442
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
