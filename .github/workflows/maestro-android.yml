@@ -18,6 +18,11 @@ jobs:
         run: |
           npm install
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.2.0'
+
       - name: Build Android App
         run: |
           npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
@@ -38,10 +43,6 @@ jobs:
       #     distribution: 'zulu'
       #     java-version: '17'
 
-      # - name: Setup Gradle
-      #   uses: gradle/actions/setup-gradle@v5
-      #   with:
-      #     gradle-version: '9.2.0'
 
       # - name: Build Android App
       #   run: |
