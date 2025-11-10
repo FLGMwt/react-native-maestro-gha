@@ -14,9 +14,9 @@ jobs:
           ls $ANDROID_SDK_ROOT
           ls $ANDROID_NDK
       - name: create AVD and generate snapshot for caching  
-        uses: FLGMwt/android-emulator-runner@debug-sdk-install
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        uses: reactivecircus/android-emulator-runner@v2
+        # env:
+        #   ANDROID_HOME: ${{ env.ANDROID_HOME }}
           # ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           # ANDROID_NDK_ROOT: ${{ env.ANDROID_NDK_ROOT }}
           # ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
