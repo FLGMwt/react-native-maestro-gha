@@ -9,9 +9,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - run: |
-          df -h
-          df -h .
+      - run: df -h .
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v6
         with:
@@ -30,6 +28,8 @@ jobs:
         with:
           gradle-version: '8.14.1'
 
+      - run: df -h .
+
       - name: Configure gradle / cmake for baked-in versions
         run: |
           cd android
@@ -42,6 +42,8 @@ jobs:
         run: |
           npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
       
+      - run: df -h .
+
       - name: Install Maestro
         run: |
           export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
@@ -61,6 +63,8 @@ jobs:
             ~/.android/adb*
           key: avd-29
 
+      - run: df -h .
+
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
@@ -70,6 +74,8 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: echo "Generated AVD snapshot for caching."
+
+      - run: df -h .
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -82,6 +88,8 @@ jobs:
             $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
             $HOME/.maestro/bin/maestro test maestro/Launch.android.yaml
 
+      - run: df -h .
+        
       - name: Upload test video
         uses: actions/upload-artifact@v4
         if: ${{ success() || failure() }}
