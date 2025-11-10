@@ -10,22 +10,31 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: |
-          npm install
+      - run: |
+          which gradle 2> /dev/null
+          gradle -v 2> /dev/null
+          echo $GRADLE_HOME
+          echo $GRADLE_USER_HOME
+          which cmake 2> /dev/null
+          cd android
+          ./gradlew clean
+      # - uses: actions/setup-node@v6
+      #   with:
+      #     cache: 'npm'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          gradle-version: '9.2.0'
+      # - name: Install dependencies
+      #   run: |
+      #     npm install
 
-      - name: Build Android App
-        run: |
-          npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
+      # - name: Setup Gradle
+      #   uses: gradle/actions/setup-gradle@v5
+      #   with:
+      #     gradle-version: '9.2.0'
+
+      # - name: Build Android App
+      #   run: |
+      #     npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
       
       # - name: Install dependencies
       #   run: |
