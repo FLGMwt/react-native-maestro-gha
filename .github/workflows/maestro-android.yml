@@ -50,8 +50,30 @@ jobs:
       - name: Build Android App
         run: |
           npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
+
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
       
       - run: df -h .
+  test:
+    runs-on: ubuntu-24.04
+    needs: build
+
+    steps:
+      - run: df -h .
+      - uses: actions/checkout@v2
+      - run: df -h .
+
+      - name: Download test files
+        uses: actions/download-artifact@v6
+        with:
+          name: release-apk
+
+      - run: df -h . && ls -la
 
       - name: Install Maestro
         run: |
@@ -96,7 +118,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
+            $ANDROID_HOME/platform-tools/adb install app-release.apk
             $HOME/.maestro/bin/maestro test maestro/Launch.android.yaml
 
       - run: df -h .
