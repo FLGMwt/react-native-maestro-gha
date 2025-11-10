@@ -14,7 +14,7 @@ jobs:
           ls $ANDROID_SDK_ROOT
           ls $ANDROID_NDK
       - name: create AVD and generate snapshot for caching  
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: FLGMwt/android-emulator-runner@debug-sdk-install
         # env:
         #   ANDROID_HOME: ${{ env.ANDROID_HOME }}
           # ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
@@ -23,7 +23,7 @@ jobs:
           # ANDROID_NDK: ${{ env.ANDROID_NDK }}
         with:
           api-level: 29
-          ndk: 27.3.13750724
+          # ndk: 27.3.13750724
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
