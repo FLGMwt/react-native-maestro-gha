@@ -10,9 +10,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - run: |
-          echo "debug"
       - uses: actions/setup-node@v6
         with:
           cache: 'npm'
@@ -21,12 +18,16 @@ jobs:
         run: |
           npm install
 
-      # - name: Setup Gradle
-      #   uses: gradle/actions/setup-gradle@v5
-      #   with:
-      #     gradle-version: '9.2.0'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '17'
 
-      - name: Configure gradle / cmake
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '9.2.0'
+
+      - name: Configure gradle / cmake for baked-in versions
         run: |
           cd android
           # spoof gradlew to use pre-installed 9.2.0
@@ -38,46 +39,51 @@ jobs:
         run: |
           npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
       
-      # - name: Install dependencies
-      #   run: |
-      #     export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
-      #     npm install
+      - name: Install Maestro
+        run: |
+          export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
 
-      # - name: Enable KVM
-      #   run: |
-      #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-      #     sudo udevadm control --reload-rules
-      #     sudo udevadm trigger --name-match=kvm
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
-      # - uses: actions/setup-java@v5
-      #   with:
-      #     distribution: 'zulu'
-      #     java-version: '17'
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-29
 
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
-      # - name: Build Android App
-      #   run: |
-      #     npx react-native build-android --tasks assembleRelease
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          arch: x86_64
+          target: google_apis
+          script: |
+            $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
+            $HOME/.maestro/bin/maestro test maestro/Launch.android.yaml
 
-      # - name: Upload Android APK
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     path: android/app/build/outputs/apk/release/app-release.apk
-      #     name: android-release-apk
-
-      # - name: run tests
-      #   uses: reactivecircus/android-emulator-runner@v2
-      #   with:
-      #     api-level: 29
-      #     arch: x86_64
-      #     target: google_apis
-      #     script: |
-      #       $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
-      #       $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
-
-      # - name: Upload test video
-      #   uses: actions/upload-artifact@v4
-      #   if: ${{ success() || failure() }}
-      #   with:
-      #     path: Launch.android.mp4
-      #     name: Android
+      - name: Upload test video
+        uses: actions/upload-artifact@v4
+        if: ${{ success() || failure() }}
+        with:
+          path: Launch.android.mp4
+          name: Android
