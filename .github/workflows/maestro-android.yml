@@ -69,6 +69,8 @@ jobs:
       #   uses: reactivecircus/android-emulator-runner@v2
       #   with:
       #     api-level: 29
+      #     arch: x86_64
+      #     target: google_apis
       #     script: |
       #       $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
       #       $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
