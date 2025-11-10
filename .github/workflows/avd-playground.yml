@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: create AVD and generate snapshot for caching  
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
         with:
           api-level: 29
           target: google_apis
@@ -18,4 +20,3 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
-          
