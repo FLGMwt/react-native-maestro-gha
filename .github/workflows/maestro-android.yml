@@ -6,23 +6,21 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-24.04]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v6
+        with:
+          cache: 'npm'
 
-      - run: |
-          which cmake
-          ls $JAVA_HOME_17_X64
-          echo $ANDROID_NDK_HOME
+      - name: Install dependencies
+        run: |
+          npm install
 
-      # - uses: actions/setup-node@v6
-      #   with:
-      #     cache: 'npm'
+      - name: Build Android App
+        run: |
+          npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
       
       # - name: Install dependencies
       #   run: |
