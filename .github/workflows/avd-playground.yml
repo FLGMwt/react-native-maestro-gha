@@ -11,8 +11,8 @@ jobs:
     steps:
       - name: create AVD and generate snapshot for caching  
         uses: reactivecircus/android-emulator-runner@v2
-        # env:
-          # ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
           # ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
           # ANDROID_NDK_ROOT: ${{ env.ANDROID_NDK_ROOT }}
           # ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
