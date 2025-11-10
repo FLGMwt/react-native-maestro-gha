@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - run: |
+          ls $ANDROID_HOME
+          ls $ANDROID_SDK_ROOT
+          ls $ANDROID_NDK
       - name: create AVD and generate snapshot for caching  
         uses: reactivecircus/android-emulator-runner@v2
         env:
