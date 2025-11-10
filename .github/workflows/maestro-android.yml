@@ -14,58 +14,58 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          which fastlane
-          export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
-          $HOME/.maestro/bin/maestro --help
-          npm install
 
-      - name: Enable KVM
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
+      - run: |
+          which cmake
+          ls $JAVA_HOME_17_X64
+          echo $ANDROID_NDK_HOME
 
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          gradle-version: '9.2.0'
-
-      - name: Build Android App
-        run: |
-          npx react-native build-android --tasks assembleRelease
-
-      - name: Upload Android APK
-        uses: actions/upload-artifact@v4
-        with:
-          path: android/app/build/outputs/apk/release/app-release.apk
-          name: android-release-apk
-
-      # - uses: actions/download-artifact@v4
+      # - uses: actions/setup-node@v6
       #   with:
+      #     cache: 'npm'
+      
+      # - name: Install dependencies
+      #   run: |
+      #     export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
+      #     npm install
+
+      # - name: Enable KVM
+      #   run: |
+      #     echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+      #     sudo udevadm control --reload-rules
+      #     sudo udevadm trigger --name-match=kvm
+
+      # - uses: actions/setup-java@v5
+      #   with:
+      #     distribution: 'zulu'
+      #     java-version: '17'
+
+      # - name: Setup Gradle
+      #   uses: gradle/actions/setup-gradle@v5
+      #   with:
+      #     gradle-version: '9.2.0'
+
+      # - name: Build Android App
+      #   run: |
+      #     npx react-native build-android --tasks assembleRelease
+
+      # - name: Upload Android APK
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     path: android/app/build/outputs/apk/release/app-release.apk
       #     name: android-release-apk
-      #     path: android/app/build/outputs/apk/release
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     repository: FLGMwt/react-native-maestro-gha
-      #     run-id: 19147543442
 
-      - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: |
-            $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
-            $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
+      # - name: run tests
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 29
+      #     script: |
+      #       $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
+      #       $HOME/.maestro/bin/maestro record maestro/Launch.android.yaml Launch.android.mp4 --local
 
-      - name: Upload test video
-        uses: actions/upload-artifact@v4
-        if: ${{ success() || failure() }}
-        with:
-          path: Launch.android.mp4
-          name: Android
+      # - name: Upload test video
+      #   uses: actions/upload-artifact@v4
+      #   if: ${{ success() || failure() }}
+      #   with:
+      #     path: Launch.android.mp4
+      #     name: Android
