@@ -12,30 +12,31 @@ jobs:
       - uses: actions/checkout@v2
 
       - run: |
-          which gradle 2> /dev/null
-          gradle -v 2> /dev/null
-          echo $GRADLE_HOME
-          echo $GRADLE_USER_HOME
-          which cmake 2> /dev/null
-          cd android
-          mv -f gradlew.local-passthrough gradlew
-          ./gradlew clean
-      # - uses: actions/setup-node@v6
-      #   with:
-      #     cache: 'npm'
+          echo "debug"
+      - uses: actions/setup-node@v6
+        with:
+          cache: 'npm'
 
-      # - name: Install dependencies
-      #   run: |
-      #     npm install
+      - name: Install dependencies
+        run: |
+          npm install
 
       # - name: Setup Gradle
       #   uses: gradle/actions/setup-gradle@v5
       #   with:
       #     gradle-version: '9.2.0'
 
-      # - name: Build Android App
-      #   run: |
-      #     npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
+      - name: Configure gradle / cmake
+        run: |
+          cd android
+          # spoof gradlew to use pre-installed 9.2.0
+          mv -f gradlew.local-passthrough gradlew
+          # point gradle to pre-installed cmake
+          mv local.properties.ubuntu-24.04 local.properties
+
+      - name: Build Android App
+        run: |
+          npx react-native build-android --tasks assembleRelease --extra-params "-x lint -x lintVitalRelease"
       
       # - name: Install dependencies
       #   run: |
