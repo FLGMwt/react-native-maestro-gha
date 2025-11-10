@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - run: |
+          df -h
+          df -h .
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v6
         with:
@@ -25,13 +28,13 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v5
         with:
-          gradle-version: '9.2.0'
+          gradle-version: '8.14.1'
 
       - name: Configure gradle / cmake for baked-in versions
         run: |
           cd android
           # spoof gradlew to use pre-installed 9.2.0
-          mv -f gradlew.local-passthrough gradlew
+          # mv -f gradlew.local-passthrough gradlew
           # point gradle to pre-installed cmake
           mv local.properties.ubuntu-24.04 local.properties
 
@@ -49,25 +52,24 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      # - name: AVD cache
-      #   uses: actions/cache@v4
-      #   id: avd-cache
-      #   with:
-      #     path: |
-      #       ~/.android/avd/*
-      #       ~/.android/adb*
-      #     key: avd-29
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-29
 
-      # - name: create AVD and generate snapshot for caching
-      #   if: steps.avd-cache.outputs.cache-hit != 'true'
-      #   uses: reactivecircus/android-emulator-runner@v2
-      #   with:
-      #     api-level: 29
-      #     target: google_apis
-      #     force-avd-creation: false
-      #     emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-      #     disable-animations: false
-      #     script: echo "Generated AVD snapshot for caching."
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: echo "Generated AVD snapshot for caching."
 
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -76,7 +78,6 @@ jobs:
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
           script: |
             $ANDROID_HOME/platform-tools/adb install android/app/build/outputs/apk/release/app-release.apk 
             $HOME/.maestro/bin/maestro test maestro/Launch.android.yaml
