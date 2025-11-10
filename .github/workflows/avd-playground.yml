@@ -13,6 +13,10 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         env:
           ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+          ANDROID_NDK_ROOT: ${{ env.ANDROID_NDK_ROOT }}
+          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
+          ANDROID_NDK: ${{ env.ANDROID_NDK }}
         with:
           api-level: 29
           target: google_apis
