@@ -2,7 +2,7 @@ name: Maestro (Android)
 
 on: 
   workflow_dispatch:
-  # push:
+  push:
 
 jobs:
   build:
@@ -11,18 +11,27 @@ jobs:
     steps:
       - run: df -h .
       - uses: actions/checkout@v2
+
+      - run: df -h .
+
       - uses: actions/setup-node@v6
         with:
           cache: 'npm'
 
+      - run: df -h .
+
       - name: Install dependencies
         run: |
           npm install
+      
+      - run: df -h .
 
       - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
+
+      - run: df -h .
 
       - uses: gradle/actions/setup-gradle@v5
         with:
@@ -47,6 +56,8 @@ jobs:
       - name: Install Maestro
         run: |
           export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
+
+      - run: df -h .
 
       - name: Enable KVM
         run: |
