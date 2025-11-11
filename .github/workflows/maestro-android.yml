@@ -9,16 +9,15 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Install Maestro
-        run: |
-          export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
-
-      - run: |
-          $HOME/.maestro/bin/maestro --version
-          maestro --version
-          exit 1
-
+      - name: run adb path test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: google_apis
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            adb install app-release.apk
+            exit 1
       - run: df -h .
       - uses: actions/checkout@v2
 
@@ -89,6 +88,7 @@ jobs:
       - name: Install Maestro
         run: |
           export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
 
       - run: df -h .
 
