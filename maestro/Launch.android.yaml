@@ -1,5 +1,17 @@
 appId: com.maestrogithubactions
+onFlowStart:
+    - runFlow: onFlowStart.yaml
+onFlowComplete:
+    - stopRecording
 ---
 - launchApp:
     clearState: true
+
+- waitForAnimationToEnd
+    
 - assertVisible: Learn & Explore
+
+- scrollUntilVisible: 
+    element: Community
+
+- assertVisible: Community

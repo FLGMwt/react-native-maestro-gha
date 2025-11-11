@@ -1,0 +1,7 @@
+appId: com.maestrogithubactions
+---
+- runFlow:
+    when:
+      true: ${MAESTRO_RECORD == 'true'}
+    commands:
+      - startRecording: ${MAESTRO_FILENAME}

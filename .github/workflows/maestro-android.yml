@@ -9,15 +9,6 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: run adb path test
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          target: google_apis
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            adb shell df -h .
-            exit 1
       - run: df -h .
       - uses: actions/checkout@v2
 
@@ -129,8 +120,8 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            $ANDROID_HOME/platform-tools/adb install app-release.apk
-            $HOME/.maestro/bin/maestro test maestro/Launch.android.yaml
+            adb install app-release.apk
+            maestro test maestro/Launch.android.yaml
 
       - run: df -h .
         
