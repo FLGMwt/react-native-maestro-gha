@@ -9,18 +9,19 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - name: Install Maestro
+        run: |
+          export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - run: |
+          $HOME/.maestro/bin/maestro --version
+          maestro --version
+          exit 1
+
       - run: df -h .
       - uses: actions/checkout@v2
 
-      - run: |
-          pwd
-          ls -la
-          cd android
-          pwd
-          ls -la
-      - run: |
-          pwd
-          ls -la
 
       - run: df -h .
 
