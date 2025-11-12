@@ -1,8 +1,8 @@
 appId: com.maestrogithubactions
-# onFlowStart:
-#     - runFlow: onFlowStart.yaml
-# onFlowComplete:
-#     - stopRecording
+onFlowStart:
+    - runFlow: onFlowStart.yaml
+onFlowComplete:
+    - stopRecording
 ---
 - launchApp:
     clearState: true
