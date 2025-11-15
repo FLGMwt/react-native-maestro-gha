@@ -19,22 +19,23 @@ jobs:
           xcodebuild -workspace ios/MaestroGitHubActions.xcworkspace -scheme MaestroGitHubActions -configuration Release -sdk iphonesimulator -derivedDataPath ios/build
           ls ios/build/Build/Products/Release-iphonesimulator
 
-  #     - name: Upload simulator release build
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: simulator_release_build
-  #         path: ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
+      - name: Upload simulator release build
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulator_release_build
+          path: ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
 
-  # test:
-  #   runs-on: macos-15
-  #   needs: build
-  #   steps:
-  #     - uses: actions/checkout@v2
+  test:
+    runs-on: macos-15
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Download simulator release build
-  #       uses: actions/download-artifact@v5
-  #       with:
-  #         name: simulator_release_build
+      - name: Download simulator release build
+        uses: actions/download-artifact@v5
+        with:
+          name: simulator_release_build
+          path: Build.app
 
       - name: Install Maestro
         run: |
@@ -54,7 +55,7 @@ jobs:
           # echo $SIMULATOR_UDID
           # open -a Simulator --args -CurrentDeviceUDID $SIMULATOR_UDID
 
-          xcrun simctl install booted MaestroGitHubActions.app
+          xcrun simctl install booted Build.app
           maestro record maestro/Launch.ios.yaml Launch.ios.mp4 --local
           echo Test complete, shutting down simulator...
           killall -9 "Simulator"
