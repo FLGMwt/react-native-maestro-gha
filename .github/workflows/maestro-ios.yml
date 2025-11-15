@@ -14,20 +14,36 @@ jobs:
             npm install
             pod install --project-directory=ios
 
-      - name: Install Maestro
-        run: |
-          export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
-
       - name: Build iOS App
         run: |
           xcodebuild -workspace ios/MaestroGitHubActions.xcworkspace -scheme MaestroGitHubActions -configuration Release -sdk iphonesimulator -derivedDataPath ios/build
           ls ios/build/Build/Products/Release-iphonesimulator
 
+      - name: Upload simulator release build
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulator_release_build
+          path: ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
+
+  test:
+    runs-on: macos-15
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download simulator release build
+        uses: actions/download-artifact@v5
+        with:
+          name: simulator_release_build
+
+      - name: Install Maestro
+        run: |
+          export MAESTRO_VERSION="2.0.8"; curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
       - uses: futureware-tech/simulator-action@v4
         with:
           model: 'iPhone 16 Pro'
-          os_version: '18.6'
           wait_for_boot: true
 
       - name: Run Maestro tests
@@ -36,7 +52,7 @@ jobs:
           # echo $SIMULATOR_UDID
           # open -a Simulator --args -CurrentDeviceUDID $SIMULATOR_UDID
 
-          xcrun simctl install booted ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
+          xcrun simctl install booted MaestroGitHubActions.app
           maestro record maestro/Launch.ios.yaml Launch.ios.mp4 --local
 
       - name: Upload test video
