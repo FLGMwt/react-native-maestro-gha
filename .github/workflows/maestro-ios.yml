@@ -46,21 +46,22 @@ jobs:
         with:
           model: 'iPhone 16 Pro'
           wait_for_boot: true
-          # hard shutdown in script after run?
-          shutdown_after_job: false
 
       - name: Run Maestro tests
         run: |
-          # SIMULATOR_UDID=`xcrun simctl list -j | jq '.devices."com.apple.CoreSimulator.SimRuntime.iOS-18-6" | .[] | select(.name == "iPhone 16 Pro") | .udid'`
-          # echo $SIMULATOR_UDID
-          # open -a Simulator --args -CurrentDeviceUDID $SIMULATOR_UDID
-
           xcrun simctl install booted Build.app
-          xcrun simctl io booted recordVideo --codec=h264 Launch.ios.mp4
-          maestro test maestro/Launch.ios.yaml Launch.ios.mp4 --no-ansiGG
-          echo Test complete, shutting down simulator...
-          killall -9 "Simulator"
-          echo Simulator shut down
+
+          # start recording which only runs in foreground and writes on SIGINT
+          xcrun simctl io booted recordVideo --codec=h264 Launch.ios.mp4 &
+          # ^run in background and capture PID to SIGINT after test
+          RECORDING_PID=$!
+
+          maestro test maestro/Launch.ios.yaml Launch.ios.mp4 --no-ansi
+          # TODO: run on non-zero so we still get a video on test fail
+
+          kill -INT $RECORDING_PID
+
+          echo Maestro done
 
       - name: Upload test video
         uses: actions/upload-artifact@v4
