@@ -19,22 +19,22 @@ jobs:
           xcodebuild -workspace ios/MaestroGitHubActions.xcworkspace -scheme MaestroGitHubActions -configuration Release -sdk iphonesimulator -derivedDataPath ios/build
           ls ios/build/Build/Products/Release-iphonesimulator
 
-      - name: Upload simulator release build
-        uses: actions/upload-artifact@v4
-        with:
-          name: simulator_release_build
-          path: ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
+  #     - name: Upload simulator release build
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: simulator_release_build
+  #         path: ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
 
-  test:
-    runs-on: macos-15
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
+  # test:
+  #   runs-on: macos-15
+  #   needs: build
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Download simulator release build
-        uses: actions/download-artifact@v5
-        with:
-          name: simulator_release_build
+  #     - name: Download simulator release build
+  #       uses: actions/download-artifact@v5
+  #       with:
+  #         name: simulator_release_build
 
       - name: Install Maestro
         run: |
@@ -45,6 +45,8 @@ jobs:
         with:
           model: 'iPhone 16 Pro'
           wait_for_boot: true
+          # hard shutdown in script after run?
+          shutdown_after_job: false
 
       - name: Run Maestro tests
         run: |
@@ -54,6 +56,9 @@ jobs:
 
           xcrun simctl install booted MaestroGitHubActions.app
           maestro record maestro/Launch.ios.yaml Launch.ios.mp4 --local
+          echo Test complete, shutting down simulator...
+          killall -9 "Simulator"
+          echo Simulator shut down
 
       - name: Upload test video
         uses: actions/upload-artifact@v4
