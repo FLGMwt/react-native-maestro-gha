@@ -56,7 +56,8 @@ jobs:
           # open -a Simulator --args -CurrentDeviceUDID $SIMULATOR_UDID
 
           xcrun simctl install booted Build.app
-          maestro record maestro/Launch.ios.yaml Launch.ios.mp4 --local
+          xcrun simctl io booted recordVideo --codec=h264 Launch.ios.mp4
+          maestro test maestro/Launch.ios.yaml Launch.ios.mp4 --no-ansiGG
           echo Test complete, shutting down simulator...
           killall -9 "Simulator"
           echo Simulator shut down
