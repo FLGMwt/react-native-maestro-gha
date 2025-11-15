@@ -56,7 +56,7 @@ jobs:
           # ^run in background and capture PID to SIGINT after test
           RECORDING_PID=$!
 
-          maestro test maestro/Launch.ios.yaml Launch.ios.mp4 --no-ansi
+          maestro test maestro/Launch.ios.yaml --no-ansi
           # TODO: run on non-zero so we still get a video on test fail
 
           kill -INT $RECORDING_PID
