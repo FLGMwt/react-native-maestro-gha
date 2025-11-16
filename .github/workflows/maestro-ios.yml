@@ -71,11 +71,15 @@ jobs:
 
       - name: Test Report
         uses: dorny/test-reporter@v2
-        if: ${{ !cancelled() }}       # run this step even if previous step failed
+        if: ${{ !cancelled() }}
         with:
           name: Maestro Tests
           path: report.xml
           reporter: java-junit
+
+      # I'm gonna replace all those broken links that don't do anything
+      # let's see what we're working with
+      - run: echo $GITHUB_STEP_SUMMARY
 
       - name: Upload test video
         if: ${{ !cancelled() }}
