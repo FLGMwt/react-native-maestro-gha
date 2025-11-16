@@ -36,7 +36,7 @@ jobs:
         with:
           name: simulator_release_build
           path: Build.app
-          # github-token: ${{ secrets.GITHUB_TOKEN }} # do I need this if I'm in the current repo & workflow/branch?
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: 19409732512
 
       - name: Install Maestro
