@@ -62,12 +62,13 @@ jobs:
 
           echo Maestro done
 
-      - name: Test Summary
-        id: test_summary
-        if: ${{ !cancelled() }}
-        uses: test-summary/action@v2
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        if: ${{ !cancelled() }}       # run this step even if previous step failed
         with:
-          paths: "report.xml"
+          name: Maestro Tests
+          path: report.xml
+          reporter: java-junit
 
       - name: Upload test video
         if: ${{ !cancelled() }}
