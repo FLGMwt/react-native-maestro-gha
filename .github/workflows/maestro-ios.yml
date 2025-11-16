@@ -55,6 +55,15 @@ jobs:
 
           # start recording which only runs in foreground and writes on SIGINT
           # ^run in background and capture PID to SIGINT after test
+
+          # TODO: document this somewhere
+          # noteworthy misleading error if the output dir doesn't exist: 
+
+          # Couldn't create an asset writer for writing video frames: allocationErrorError starting video recorder: simctl.SimulatorError.allocationError.
+          # An error was encountered processing the command (domain=simctl.SimulatorError, code=2):
+          # We could not allocate necessary AV objects to perform the recording.
+
+          mkdir test-runs
           
           xcrun simctl io booted recordVideo --codec=h264 test-runs/Launch1.ios.mp4 &
           RECORDING_PID1=$!
