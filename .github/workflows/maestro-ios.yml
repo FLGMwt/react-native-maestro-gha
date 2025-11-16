@@ -63,5 +63,5 @@ jobs:
       - name: Upload test video
         uses: actions/upload-artifact@v4
         with:
-          path: test-runs
           name: test-runs
+          path: *.mp4
