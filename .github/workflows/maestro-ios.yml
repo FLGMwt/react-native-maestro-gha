@@ -5,29 +5,29 @@ on:
   push:
 
 jobs:
-  build:
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-            npm install
-            pod install --project-directory=ios
+  # build:
+  #   runs-on: macos-15
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install dependencies
+  #       run: |
+  #           npm install
+  #           pod install --project-directory=ios
 
-      - name: Build iOS App
-        run: |
-          xcodebuild -workspace ios/MaestroGitHubActions.xcworkspace -scheme MaestroGitHubActions -configuration Release -sdk iphonesimulator -derivedDataPath ios/build
-          ls ios/build/Build/Products/Release-iphonesimulator
+  #     - name: Build iOS App
+  #       run: |
+  #         xcodebuild -workspace ios/MaestroGitHubActions.xcworkspace -scheme MaestroGitHubActions -configuration Release -sdk iphonesimulator -derivedDataPath ios/build
+  #         ls ios/build/Build/Products/Release-iphonesimulator
 
-      - name: Upload simulator release build
-        uses: actions/upload-artifact@v4
-        with:
-          name: simulator_release_build
-          path: ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
+  #     - name: Upload simulator release build
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: simulator_release_build
+  #         path: ios/build/Build/Products/Release-iphonesimulator/MaestroGitHubActions.app
 
   test:
     runs-on: macos-15
-    needs: build
+    # needs: build
     steps:
       - uses: actions/checkout@v2
 
@@ -36,6 +36,8 @@ jobs:
         with:
           name: simulator_release_build
           path: Build.app
+          # github-token: ${{ secrets.GITHUB_TOKEN }} # do I need this if I'm in the current repo & workflow/branch?
+          run-id: 19409732512
 
       - name: Install Maestro
         run: |
