@@ -56,11 +56,19 @@ jobs:
         run: |
           xcrun simctl install booted Build.app
 
-          maestro test maestro/Launch.ios.yaml --no-ansi
+          maestro test maestro/Launch.ios.yaml --no-ansi --format JUNIT
 
           echo Maestro done
 
+      - name: Test Summary
+        id: test_summary
+        if: ${{ !cancelled() }}
+        uses: test-summary/action@v2
+        with:
+          paths: "report.xml"
+
       - name: Upload test video
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: test-runs
