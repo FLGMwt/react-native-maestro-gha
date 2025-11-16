@@ -54,15 +54,24 @@ jobs:
           xcrun simctl install booted Build.app
 
           # start recording which only runs in foreground and writes on SIGINT
-          xcrun simctl io booted recordVideo --codec=h264 Launch.ios.mp4 &
           # ^run in background and capture PID to SIGINT after test
-          RECORDING_PID=$!
-
+          
+          xcrun simctl io booted recordVideo --codec=h264 Launch1.ios.mp4 &
+          RECORDING_PID1=$!
           maestro test maestro/Launch.ios.yaml --no-ansi
+          kill -INT $RECORDING_PID1
+
+          xcrun simctl io booted recordVideo --codec=h264 Launch2.ios.mp4 &
+          RECORDING_PID2=$!
+          maestro test maestro/Launch.ios.yaml --no-ansi
+          kill -INT $RECORDING_PID2
+
+          xcrun simctl io booted recordVideo --codec=h264 Launch3.ios.mp4 &
+          RECORDING_PID3=$!
+          maestro test maestro/Launch.ios.yaml --no-ansi
+          kill -INT $RECORDING_PID3
+
           # TODO: run on non-zero so we still get a video on test fail
-
-          kill -INT $RECORDING_PID
-
           echo Maestro done
 
       - name: Upload test video
