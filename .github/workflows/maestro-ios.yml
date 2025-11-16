@@ -32,11 +32,11 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Download simulator release build
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v4
         with:
           name: simulator_release_build
           path: Build.app
-          # github-token: ${{ secrets.GITHUB_TOKEN }} # do I need this if I'm in the current repo & workflow/branch?
+          github-token: ${{ secrets.GITHUB_TOKEN }} # do I need this if I'm in the current repo & workflow/branch?
           run-id: 19409732512
 
       - name: Install Maestro
